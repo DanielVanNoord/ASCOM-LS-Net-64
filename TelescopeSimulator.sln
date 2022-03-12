@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelescopeSimulator", "TelescopeSimulator\TelescopeSimulator.csproj", "{5A57F328-B3EC-46FA-85F1-FA0B25F30B36}"
+EndProject
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "ASCOM.Utilities.Core", "ASCOM.Core\ASCOM.Utilities.Core\ASCOM.Utilities.Core.vbproj", "{B8F592F6-A521-4590-825F-601E87C37E6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASCOM.Controls.Core", "ASCOM.Core\ASCOM.Controls.Core\ASCOM.Controls.Core.csproj", "{01F9F785-0AAD-47EE-92F5-CC46CF498EAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelescopeSimulator.Shared", "TelescopeSimulator.Shared\TelescopeSimulator.Shared.csproj", "{7013932F-D02D-4482-A3E1-AD14F436F15F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowsBase.Vector", "WindowsBase.Vector\WindowsBase.Vector\WindowsBase.Vector.csproj", "{79B6F7A3-FB1E-4439-8D1C-B1277ECAAEF4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{75EA1D82-8680-4BF0-B17B-E334B7E997A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A57F328-B3EC-46FA-85F1-FA0B25F30B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A57F328-B3EC-46FA-85F1-FA0B25F30B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A57F328-B3EC-46FA-85F1-FA0B25F30B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A57F328-B3EC-46FA-85F1-FA0B25F30B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8F592F6-A521-4590-825F-601E87C37E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8F592F6-A521-4590-825F-601E87C37E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8F592F6-A521-4590-825F-601E87C37E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8F592F6-A521-4590-825F-601E87C37E6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01F9F785-0AAD-47EE-92F5-CC46CF498EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F9F785-0AAD-47EE-92F5-CC46CF498EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F9F785-0AAD-47EE-92F5-CC46CF498EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F9F785-0AAD-47EE-92F5-CC46CF498EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7013932F-D02D-4482-A3E1-AD14F436F15F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7013932F-D02D-4482-A3E1-AD14F436F15F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7013932F-D02D-4482-A3E1-AD14F436F15F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7013932F-D02D-4482-A3E1-AD14F436F15F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79B6F7A3-FB1E-4439-8D1C-B1277ECAAEF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B6F7A3-FB1E-4439-8D1C-B1277ECAAEF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B6F7A3-FB1E-4439-8D1C-B1277ECAAEF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B6F7A3-FB1E-4439-8D1C-B1277ECAAEF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B8F592F6-A521-4590-825F-601E87C37E6A} = {75EA1D82-8680-4BF0-B17B-E334B7E997A0}
+		{01F9F785-0AAD-47EE-92F5-CC46CF498EAB} = {75EA1D82-8680-4BF0-B17B-E334B7E997A0}
+		{79B6F7A3-FB1E-4439-8D1C-B1277ECAAEF4} = {75EA1D82-8680-4BF0-B17B-E334B7E997A0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B2D72FF-85E2-46F4-8CCF-F8A11E6521A0}
+	EndGlobalSection
+EndGlobal
