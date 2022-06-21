@@ -25,9 +25,9 @@ using System.Runtime.InteropServices;
 using ASCOM.Utilities;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using ASCOM.Standard.Interfaces;
 using System.Text;
 using System.Collections.Generic;
+using ASCOM.Common.DeviceInterfaces;
 
 namespace ASCOM.Simulator
 {
@@ -47,7 +47,6 @@ namespace ASCOM.Simulator
         private AxisRates[] m_AxisRates;
         private TrackingRates m_TrackingRates;
         private TrackingRatesSimple m_TrackingRatesSimple;
-        private ASCOM.Standard.Utilities.Utilities m_Util;
         private string driverID;
         private long objectId;
 
@@ -70,7 +69,6 @@ namespace ASCOM.Simulator
                 m_AxisRates[2] = new AxisRates(TelescopeAxis.Tertiary);
                 m_TrackingRates = new TrackingRates();
                 m_TrackingRatesSimple = new TrackingRatesSimple();
-                m_Util = new ASCOM.Standard.Utilities.Utilities();
                 // get a unique instance id
                 objectId = TelescopeHardware.GetId();
                 TelescopeHardware.TL.LogMessage("New", "Instance ID: " + objectId + ", new: " + "Driver ID: " + driverID);
@@ -181,7 +179,7 @@ namespace ASCOM.Simulator
                     SharedResources.TrafficEnd("No coordinates at park!");
                     throw new PropertyNotImplementedException("Altitude", false);
                 }
-                SharedResources.TrafficEnd(m_Util.DegreesToDMS(TelescopeHardware.Altitude));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.DegreesToDMS(TelescopeHardware.Altitude));
                 return TelescopeHardware.Altitude;
             }
         }
@@ -259,7 +257,7 @@ namespace ASCOM.Simulator
                     SharedResources.TrafficEnd("No coordinates at park!");
                     throw new PropertyNotImplementedException("Azimuth", false);
                 }
-                SharedResources.TrafficEnd(m_Util.DegreesToDMS(TelescopeHardware.Azimuth));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.DegreesToDMS(TelescopeHardware.Azimuth));
                 return TelescopeHardware.Azimuth;
             }
         }
@@ -477,7 +475,7 @@ namespace ASCOM.Simulator
                     SharedResources.TrafficEnd("No coordinates at park!");
                     throw new PropertyNotImplementedException("Declination", false);
                 }
-                SharedResources.TrafficEnd(m_Util.DegreesToDMS(TelescopeHardware.Declination));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.DegreesToDMS(TelescopeHardware.Declination));
                 return TelescopeHardware.Declination;
             }
         }
@@ -826,7 +824,7 @@ namespace ASCOM.Simulator
                     SharedResources.TrafficEnd("No coordinates at park!");
                     throw new PropertyNotImplementedException("RightAscension", false);
                 }
-                SharedResources.TrafficEnd(m_Util.HoursToHMS(TelescopeHardware.RightAscension));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.HoursToHMS(TelescopeHardware.RightAscension));
                 return TelescopeHardware.RightAscension;
             }
         }
@@ -872,7 +870,7 @@ namespace ASCOM.Simulator
             }
         }
 
-        public ASCOM.Standard.Interfaces.PointingState SideOfPier
+        public PointingState SideOfPier
         {
             get
             {
@@ -903,7 +901,7 @@ namespace ASCOM.Simulator
             {
                 SharedResources.TrafficStart(SharedResources.MessageType.Time, "Sidereal Time: ");
                 CheckCapability(TelescopeHardware.CanSiderealTime, "SiderealTime", false);
-                SharedResources.TrafficEnd(m_Util.HoursToHMS(TelescopeHardware.SiderealTime));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.HoursToHMS(TelescopeHardware.SiderealTime));
                 return TelescopeHardware.SiderealTime;
             }
         }
@@ -992,7 +990,7 @@ namespace ASCOM.Simulator
             CheckRange(Azimuth, 0, 360, "SlewToltAz", "azimuth");
             CheckRange(Altitude, -90, 90, "SlewToAltAz", "Altitude");
 
-            SharedResources.TrafficStart(" Alt " + m_Util.DegreesToDMS(Altitude) + " Az " + m_Util.DegreesToDMS(Azimuth));
+            SharedResources.TrafficStart(" Alt " + ASCOM.Tools.Utilities.DegreesToDMS(Altitude) + " Az " + ASCOM.Tools.Utilities.DegreesToDMS(Azimuth));
 
             TelescopeHardware.StartSlewAltAz(Altitude, Azimuth);
 
@@ -1012,7 +1010,7 @@ namespace ASCOM.Simulator
             CheckRange(Azimuth, 0, 360, "SlewToAltAzAsync", "Azimuth");
             CheckRange(Altitude, -90, 90, "SlewToAltAzAsync", "Altitude");
 
-            SharedResources.TrafficStart(" Alt " + m_Util.DegreesToDMS(Altitude) + " Az " + m_Util.DegreesToDMS(Azimuth));
+            SharedResources.TrafficStart(" Alt " + ASCOM.Tools.Utilities.DegreesToDMS(Altitude) + " Az " + ASCOM.Tools.Utilities.DegreesToDMS(Azimuth));
 
             TelescopeHardware.StartSlewAltAz(Altitude, Azimuth);
             SharedResources.TrafficEnd(" started");
@@ -1027,7 +1025,7 @@ namespace ASCOM.Simulator
             CheckParked("SlewToCoordinates");
             CheckTracking(true, "SlewToCoordinates");
 
-            SharedResources.TrafficStart(" RA " + m_Util.HoursToHMS(RightAscension) + " DEC " + m_Util.DegreesToDMS(Declination));
+            SharedResources.TrafficStart(" RA " + ASCOM.Tools.Utilities.HoursToHMS(RightAscension) + " DEC " + ASCOM.Tools.Utilities.DegreesToDMS(Declination));
 
             TelescopeHardware.TargetRightAscension = RightAscension; // Set the Target RA and Dec prior to the Slew attempt per the ASCOM Telescope specification
             TelescopeHardware.TargetDeclination = Declination;
@@ -1054,7 +1052,7 @@ namespace ASCOM.Simulator
             TelescopeHardware.TargetRightAscension = RightAscension; // Set the Target RA and Dec prior to the Slew attempt per the ASCOM Telescope specification
             TelescopeHardware.TargetDeclination = Declination;
 
-            SharedResources.TrafficStart(" RA " + m_Util.HoursToHMS(RightAscension) + " DEC " + m_Util.DegreesToDMS(Declination));
+            SharedResources.TrafficStart(" RA " + ASCOM.Tools.Utilities.HoursToHMS(RightAscension) + " DEC " + ASCOM.Tools.Utilities.DegreesToDMS(Declination));
 
             TelescopeHardware.StartSlewRaDec(RightAscension, Declination, true);
             SharedResources.TrafficEnd("started");
@@ -1107,7 +1105,7 @@ namespace ASCOM.Simulator
             CheckParked("SyncToAltAz");
             CheckTracking(false, "SyncToAltAz");
 
-            SharedResources.TrafficStart(" Alt " + m_Util.DegreesToDMS(Altitude) + " Az " + m_Util.DegreesToDMS(Azimuth));
+            SharedResources.TrafficStart(" Alt " + ASCOM.Tools.Utilities.DegreesToDMS(Altitude) + " Az " + ASCOM.Tools.Utilities.DegreesToDMS(Azimuth));
 
             TelescopeHardware.ChangePark(false);
 
@@ -1129,7 +1127,7 @@ namespace ASCOM.Simulator
             CheckParked("SyncToCoordinates");
             CheckTracking(true, "SyncToCoordinates");
 
-            SharedResources.TrafficStart(string.Format(CultureInfo.CurrentCulture, " RA {0} DEC {1}", m_Util.HoursToHMS(RightAscension), m_Util.DegreesToDMS(Declination)));
+            SharedResources.TrafficStart(string.Format(CultureInfo.CurrentCulture, " RA {0} DEC {1}", ASCOM.Tools.Utilities.HoursToHMS(RightAscension), ASCOM.Tools.Utilities.DegreesToDMS(Declination)));
 
             TelescopeHardware.TargetDeclination = Declination;
             TelescopeHardware.TargetRightAscension = RightAscension;
@@ -1152,7 +1150,7 @@ namespace ASCOM.Simulator
             CheckRange(TelescopeHardware.TargetRightAscension, 0, 24, "SyncToTarget", "TargetRightAscension");
             CheckRange(TelescopeHardware.TargetDeclination, -90, 90, "SyncToTarget", "TargetDeclination");
 
-            SharedResources.TrafficStart(" RA " + m_Util.HoursToHMS(TelescopeHardware.TargetRightAscension) + " DEC " + m_Util.DegreesToDMS(TelescopeHardware.TargetDeclination));
+            SharedResources.TrafficStart(" RA " + ASCOM.Tools.Utilities.HoursToHMS(TelescopeHardware.TargetRightAscension) + " DEC " + ASCOM.Tools.Utilities.DegreesToDMS(TelescopeHardware.TargetDeclination));
 
             CheckParked("SyncToTarget");
             CheckTracking(true, "SyncToTarget");
@@ -1175,7 +1173,7 @@ namespace ASCOM.Simulator
                 SharedResources.TrafficStart(SharedResources.MessageType.Gets, "TargetDeclination: ");
                 CheckCapability(TelescopeHardware.CanSlew, "TargetDeclination", false);
                 CheckRange(TelescopeHardware.TargetDeclination, -90, 90, "TargetDeclination");
-                SharedResources.TrafficEnd(m_Util.DegreesToDMS(TelescopeHardware.TargetDeclination));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.DegreesToDMS(TelescopeHardware.TargetDeclination));
                 return TelescopeHardware.TargetDeclination;
             }
             set
@@ -1183,7 +1181,7 @@ namespace ASCOM.Simulator
                 SharedResources.TrafficStart(SharedResources.MessageType.Gets, "TargetDeclination:-> ");
                 CheckCapability(TelescopeHardware.CanSlew, "TargetDeclination", true);
                 CheckRange(value, -90, 90, "TargetDeclination");
-                SharedResources.TrafficEnd(m_Util.DegreesToDMS(value));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.DegreesToDMS(value));
                 TelescopeHardware.TargetDeclination = value;
             }
         }
@@ -1195,7 +1193,7 @@ namespace ASCOM.Simulator
                 SharedResources.TrafficStart(SharedResources.MessageType.Gets, "TargetRightAscension: ");
                 CheckCapability(TelescopeHardware.CanSlew, "TargetRightAscension", false);
                 CheckRange(TelescopeHardware.TargetRightAscension, 0, 24, "TargetRightAscension");
-                SharedResources.TrafficEnd(m_Util.HoursToHMS(TelescopeHardware.TargetRightAscension));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.HoursToHMS(TelescopeHardware.TargetRightAscension));
                 return TelescopeHardware.TargetRightAscension;
             }
             set
@@ -1204,7 +1202,7 @@ namespace ASCOM.Simulator
                 CheckCapability(TelescopeHardware.CanSlew, "TargetRightAscension", true);
                 CheckRange(value, 0, 24, "TargetRightAscension");
 
-                SharedResources.TrafficEnd(m_Util.HoursToHMS(value));
+                SharedResources.TrafficEnd(ASCOM.Tools.Utilities.HoursToHMS(value));
                 TelescopeHardware.TargetRightAscension = value;
             }
         }
@@ -1237,7 +1235,7 @@ namespace ASCOM.Simulator
             {
                 SharedResources.TrafficStart(SharedResources.MessageType.Other, "TrackingRate: -> ");
                 CheckVersionOne("TrackingRate", true);
-                if ((value < DriveRate.DriveSidereal) || (value > DriveRate.DriveKing)) throw new InvalidValueException("TrackingRate", value.ToString(), "0 (DriveSidereal) to 3 (driveKing)");
+                if ((value < DriveRate.Sidereal) || (value > DriveRate.King)) throw new InvalidValueException("TrackingRate", value.ToString(), "0 (DriveSidereal) to 3 (driveKing)");
                 TelescopeHardware.TrackingRate = value;
                 SharedResources.TrafficEnd(value.ToString() + "(done)");
             }
@@ -1273,7 +1271,7 @@ namespace ASCOM.Simulator
             }
         }
 
-        public void UnPark()
+        public void Unpark()
         {
             SharedResources.TrafficStart(SharedResources.MessageType.Slew, "UnPark: ");
             CheckCapability(TelescopeHardware.CanUnpark, "UnPark");
@@ -1433,8 +1431,6 @@ namespace ASCOM.Simulator
             m_TrackingRates = null;
             m_TrackingRatesSimple.Dispose();
             m_TrackingRatesSimple = null;
-            m_Util.Dispose();
-            m_Util = null;
         }
 
         #endregion
@@ -1652,7 +1648,7 @@ namespace ASCOM.Simulator
             // the tracking rates supported by your telescope. The one value
             // (tracking rate) that MUST be supported is DriveSidereal!
             //
-            m_TrackingRates = new DriveRate[] { DriveRate.DriveSidereal, DriveRate.DriveKing, DriveRate.DriveLunar, DriveRate.DriveSolar };
+            m_TrackingRates = new DriveRate[] { DriveRate.Sidereal, DriveRate.King, DriveRate.Lunar, DriveRate.Solar };
         }
 
         #region ITrackingRates Members
@@ -1748,7 +1744,7 @@ namespace ASCOM.Simulator
             // the tracking rates supported by your telescope. The one value
             // (tracking rate) that MUST be supported is DriveSidereal!
             //
-            m_TrackingRates = new DriveRate[] { DriveRate.DriveSidereal };
+            m_TrackingRates = new DriveRate[] { DriveRate.Sidereal };
         }
 
         #region ITrackingRates Members

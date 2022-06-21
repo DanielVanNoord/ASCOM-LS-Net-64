@@ -1,5 +1,4 @@
 ﻿using ASCOM.Simulator;
-using ASCOM.Standard.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

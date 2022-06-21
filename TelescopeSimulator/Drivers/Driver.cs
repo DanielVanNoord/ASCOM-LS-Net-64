@@ -17,7 +17,7 @@
 // 29 Dec 2010  cdr         Extensive refactoring and bug fixes
 // --------------------------------------------------------------------------------
 //
-using ASCOM.DeviceInterface;
+using ASCOM.Common.DeviceInterfaces;
 using ASCOM.Utilities;
 using System;
 using System.Collections;
@@ -48,7 +48,6 @@ namespace ASCOM.Simulator
         // Driver private data (rate collections)
         //
 
-        private ASCOM.Utilities.Util m_Util;
         private string driverID;
         private long objectId;
 
@@ -69,7 +68,6 @@ namespace ASCOM.Simulator
             {
                 driverID = Marshal.GenerateProgIdForType(this.GetType());
 
-                m_Util = new ASCOM.Utilities.Util();
                 // get a unique instance id
                 objectId = TelescopeHardware.GetId();
                 TelescopeHardware.TL.LogMessage("New", "Instance ID: " + objectId + ", new: " + "Driver ID: " + driverID);
@@ -78,7 +76,6 @@ namespace ASCOM.Simulator
             }
             catch (Exception ex)
             {
-                EventLogCode.LogEvent("ASCOM.SimulatorCore.Telescope", "Exception on New", EventLogEntryType.Error, GlobalConstants.EventLogErrors.TelescopeSimulatorNew, ex.ToString());
                 System.Windows.Forms.MessageBox.Show("Telescope New: " + ex.ToString());
             }
         }
@@ -94,11 +91,11 @@ namespace ASCOM.Simulator
         /// <summary>
         /// Gets the supported actions.
         /// </summary>
-        public ArrayList SupportedActions => new ArrayList(TelescopeInstance.SupportedActions.ToArray());
+        public IList<string> SupportedActions => TelescopeInstance.SupportedActions.ToArray();
 
         public void AbortSlew() => TelescopeInstance.AbortSlew();
 
-        public AlignmentModes AlignmentMode => (AlignmentModes) TelescopeInstance.AlignmentMode;
+        public AlignmentMode AlignmentMode => (AlignmentMode) TelescopeInstance.AlignmentMode;
 
         public double Altitude => TelescopeInstance.Altitude;
 
@@ -110,16 +107,16 @@ namespace ASCOM.Simulator
 
         public bool AtPark => TelescopeInstance.AtPark;
 
-        public IAxisRates AxisRates(TelescopeAxes Axis) 
+        public IAxisRates AxisRates(TelescopeAxis Axis) 
         {
-            return new AxisRatesObject(TelescopeInstance.AxisRates((Standard.Interfaces.TelescopeAxis)Axis));
+            return new AxisRatesObject(TelescopeInstance.AxisRates(Axis));
         }
 
         public double Azimuth => TelescopeInstance.Azimuth;
 
         public bool CanFindHome => TelescopeInstance.CanFindHome;
 
-        public bool CanMoveAxis(TelescopeAxes Axis) => TelescopeInstance.CanMoveAxis((Standard.Interfaces.TelescopeAxis) Axis);
+        public bool CanMoveAxis(TelescopeAxis Axis) => TelescopeInstance.CanMoveAxis(Axis);
 
         public bool CanPark => TelescopeInstance.CanPark;
 
@@ -174,7 +171,7 @@ namespace ASCOM.Simulator
 
         public string Description => TelescopeInstance.Description;
 
-        public PierSide DestinationSideOfPier(double RightAscension, double Declination) => (PierSide) TelescopeInstance.DestinationSideOfPier(RightAscension, Declination);
+        public PointingState DestinationSideOfPier(double RightAscension, double Declination) => TelescopeInstance.DestinationSideOfPier(RightAscension, Declination);
 
         public bool DoesRefraction
         {
@@ -208,13 +205,13 @@ namespace ASCOM.Simulator
 
         public bool IsPulseGuiding => TelescopeInstance.IsPulseGuiding;
 
-        public void MoveAxis(TelescopeAxes Axis, double Rate) => TelescopeInstance.MoveAxis((Standard.Interfaces.TelescopeAxis)Axis, Rate);
+        public void MoveAxis(TelescopeAxis Axis, double Rate) => TelescopeInstance.MoveAxis(Axis, Rate);
 
         public string Name => TelescopeInstance.Name;
 
         public void Park() => TelescopeInstance.Park();
 
-        public void PulseGuide(GuideDirections Direction, int Duration) => TelescopeInstance.PulseGuide((Standard.Interfaces.GuideDirection)Direction, Duration);
+        public void PulseGuide(GuideDirection Direction, int Duration) => TelescopeInstance.PulseGuide(Direction, Duration);
 
         public double RightAscension => TelescopeInstance.RightAscension;
 
@@ -232,10 +229,10 @@ namespace ASCOM.Simulator
             TelescopeInstance.SetupDialog();
         }
 
-        public PierSide SideOfPier
+        public PointingState SideOfPier
         {
-            get { return (PierSide) TelescopeInstance.SideOfPier; }
-            set { TelescopeInstance.SideOfPier = (ASCOM.Standard.Interfaces.PointingState) value; }
+            get { return TelescopeInstance.SideOfPier; }
+            set { TelescopeInstance.SideOfPier = value; }
         }
 
         public double SiderealTime => TelescopeInstance.SiderealTime;
@@ -320,15 +317,15 @@ namespace ASCOM.Simulator
             }
         }
 
-        public DriveRates TrackingRate
+        public DriveRate TrackingRate
         {
             get
             {
-                return (DriveRates) TelescopeInstance.TrackingRate;
+                return TelescopeInstance.TrackingRate;
             }
             set
             {
-                TelescopeInstance.TrackingRate = (Standard.Interfaces.DriveRate) value;
+                TelescopeInstance.TrackingRate = value;
             }
         }
 
@@ -346,7 +343,7 @@ namespace ASCOM.Simulator
             }
         }
 
-        public void Unpark() => TelescopeInstance.UnPark();
+        public void Unpark() => TelescopeInstance.Unpark();
 
 
         #endregion ITelescope Members
@@ -365,17 +362,17 @@ namespace ASCOM.Simulator
 
         public class TrackingRateObject : ITrackingRates, IEnumerable, IEnumerator, IDisposable
         {
-            private List<DriveRates> m_TrackingRates = new List<DriveRates>();
+            private List<DriveRate> m_TrackingRates = new List<DriveRate>();
             private int _pos = -1;
             //
             // Default constructor - Internal prevents public creation
             // of instances. Returned by Telescope.AxisRates.
             //
-            public TrackingRateObject(Standard.Interfaces.ITrackingRates rates)
+            public TrackingRateObject(ITrackingRates rates)
             {
-                foreach(Standard.Interfaces.DriveRate rate in rates)
+                foreach(DriveRate rate in rates)
                 {
-                    m_TrackingRates.Add((DriveRates)rate);
+                    m_TrackingRates.Add(rate);
                 }
             }
 
@@ -393,7 +390,7 @@ namespace ASCOM.Simulator
             }
 
 
-            public DriveRates this[int index]
+            public DriveRate this[int index]
             {
                 get
                 {
@@ -463,9 +460,9 @@ namespace ASCOM.Simulator
             // Constructor - Internal prevents public creation
             // of instances. Returned by Telescope.AxisRates.
             //
-            public AxisRatesObject(Standard.Interfaces.IAxisRates Axis)
+            public AxisRatesObject(IAxisRates Axis)
             {
-                foreach (Standard.Interfaces.IRate rate in Axis)
+                foreach (IRate rate in Axis)
                 {
                     m_Rates.Add(new Rate(rate.Minimum, rate.Maximum));
                 }

@@ -458,11 +458,8 @@ namespace ASCOM.Simulator
                     attr = Attribute.GetCustomAttribute(type, typeof(ServedClassNameAttribute));
                     string chooserName = ((ASCOM.ServedClassNameAttribute)attr).DisplayName ?? "telescope Simulator";
 
-                    using (var P = new ASCOM.Utilities.Profile())
-                    {
-                        P.DeviceType = deviceType;
-                        P.Register(progid, chooserName);
-                    }
+                    ASCOM.Com.Profile.Register((Common.DeviceTypes) Enum.Parse(typeof(Common.DeviceTypes), deviceType), progid, chooserName);
+
                 }
                 catch (Exception ex)
                 {
@@ -526,16 +523,12 @@ namespace ASCOM.Simulator
                     //
                     // ASCOM
                     //
-                    using (var P = new ASCOM.Utilities.Profile())
-                    {
-                        P.DeviceType = progid.Substring(progid.LastIndexOf('.') + 1);
-                        P.Unregister(progid);
+                        Com.Profile.UnRegister((Common.DeviceTypes)Enum.Parse(typeof(Common.DeviceTypes), progid.Substring(progid.LastIndexOf('.') + 1)), progid);
                         //try										// In case Helper becomes native .NET
                         //{
                         //    Marshal.ReleaseComObject(P);
                         //}
                         //catch (Exception) { }
-                    }
                 }
                 catch (Exception) { }
             }
@@ -679,12 +672,12 @@ namespace ASCOM.Simulator
             {
                 // Save the last used Azimuth and Altitude
                 TelescopeHardware.TL.LogMessage("Main", string.Format("Saving shutdown values for Azimuth: {0}, Altitude: {1}", TelescopeHardware.Azimuth, TelescopeHardware.Altitude));
-                using (Profile profile = new Profile())
+                /*using (Profile profile = new Profile())
                 {
                     // Best endeavours to save the shutdown alt/az for use on next startup if required
                     try { profile.WriteValue(SharedResources.PROGRAM_ID, "ShutdownAzimuth", TelescopeHardware.Azimuth.ToString(CultureInfo.InvariantCulture)); } catch { }
                     try { profile.WriteValue(SharedResources.PROGRAM_ID, "ShutdownAltitude", TelescopeHardware.Altitude.ToString(CultureInfo.InvariantCulture)); } catch { }
-                }
+                }*/
 
                 // Revoke the class factories immediately.
                 // Don't wait until the thread has stopped before

@@ -28,7 +28,7 @@ using System.Threading;
 using System.Windows;
 using System.Collections.Generic;
 using ASCOM.Utilities;
-using ASCOM.Standard.Interfaces;
+using ASCOM.Common.DeviceInterfaces;
 
 namespace ASCOM.Simulator
 {
@@ -255,11 +255,12 @@ namespace ASCOM.Simulator
             EqS
         }
 
-        private enum PointingState
+        /*private enum PointingState
         {
             Normal,
             ThroughThePole
         }
+        */
 
         #endregion
 
@@ -545,7 +546,7 @@ namespace ASCOM.Simulator
                 rateRaDec.Y = 0;
                 rateRaDec.X = 0;
 
-                TrackingRate = DriveRate.DriveSidereal;
+                TrackingRate = DriveRate.Sidereal;
                 SlewSettleTime = 0;
                 ChangePark(AtPark);
 
@@ -1327,12 +1328,12 @@ namespace ASCOM.Simulator
             get { return AtPark; }
         }
 
-        public static ASCOM.Standard.Interfaces.PointingState SideOfPier
+        public static PointingState SideOfPier
         {
             get
             {
                 return (mountAxes.Y <= 90 && mountAxes.Y >= -90) ?
-                    ASCOM.Standard.Interfaces.PointingState.Normal : ASCOM.Standard.Interfaces.PointingState.ThroughThePole;
+                    PointingState.Normal : PointingState.ThroughThePole;
             }
             set
             {
@@ -1462,19 +1463,19 @@ namespace ASCOM.Simulator
         /// <param name="rightAscension">The right ascension.</param>
         /// <param name="declination">The declination.</param>
         /// <returns></returns>
-        public static Standard.Interfaces.PointingState SideOfPierRaDec(double rightAscension, double declination)
+        public static PointingState SideOfPierRaDec(double rightAscension, double declination)
         {
-            Standard.Interfaces.PointingState sideOfPier;
+            PointingState sideOfPier;
             if (alignmentMode != AlignmentMode.GermanPolar)
             {
-                return Standard.Interfaces.PointingState.Unknown;
+                return PointingState.Unknown;
             }
             else
             {
                 double ha = AstronomyFunctions.HourAngle(rightAscension, longitude);
-                if (ha < 0.0 && ha >= -12.0) sideOfPier = Standard.Interfaces.PointingState.ThroughThePole;
-                else if (ha >= 0.0 && ha <= 12.0) sideOfPier = Standard.Interfaces.PointingState.Normal;
-                else sideOfPier = Standard.Interfaces.PointingState.Unknown;
+                if (ha < 0.0 && ha >= -12.0) sideOfPier = PointingState.ThroughThePole;
+                else if (ha >= 0.0 && ha <= 12.0) sideOfPier = PointingState.Normal;
+                else sideOfPier = PointingState.Unknown;
                 LogMessage("SideOfPierRaDec", "Ra {0}, Dec {1}, Ha {2}, sop {3}", rightAscension, declination, ha, sideOfPier);
 
                 return sideOfPier;
@@ -1538,16 +1539,16 @@ namespace ASCOM.Simulator
             // generate the change in hour angle as a result of tracking
             switch (TrackingRate)
             {
-                case DriveRate.DriveSidereal:
+                case DriveRate.Sidereal:
                     haChange = SIDEREAL_RATE_DEG_SEC * updateInterval;     // change in degrees
                     break;
-                case DriveRate.DriveSolar:
+                case DriveRate.Solar:
                     haChange = SOLAR_RATE_DEG_SEC * updateInterval;     // change in degrees
                     break;
-                case DriveRate.DriveLunar:
+                case DriveRate.Lunar:
                     haChange = LUNAR_RATE_DEG_SEC * updateInterval;     // change in degrees
                     break;
-                case DriveRate.DriveKing:
+                case DriveRate.King:
                     haChange = KING_RATE_DEG_SEC * updateInterval;     // change in degrees
                     break;
             }

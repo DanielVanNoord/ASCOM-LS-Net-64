@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
-using ASCOM.Standard.Interfaces;
+using ASCOM.Common.DeviceInterfaces;
 
 namespace ASCOM.Simulator
 {
@@ -15,7 +15,7 @@ namespace ASCOM.Simulator
 
         delegate void SetTextCallback(string text);
 
-        ASCOM.Standard.Utilities.Utilities util = new ASCOM.Standard.Utilities.Utilities();
+        //ASCOM.Standard.Utilities.Utilities util = new ASCOM.Standard.Utilities.Utilities();
 
         public FrmMain()
         {
@@ -165,7 +165,7 @@ namespace ASCOM.Simulator
         public void SiderealTime(double value)
         {
             SetTextCallback setText = new SetTextCallback(SetLstText);
-            string text = util.HoursToHMS(value);
+            string text = ASCOM.Tools.Utilities.HoursToHMS(value);
             try { this.Invoke(setText, text); }
             catch { }
         }
@@ -173,7 +173,7 @@ namespace ASCOM.Simulator
         public void RightAscension(double value)
         {
             SetTextCallback setText = new SetTextCallback(SetRaText);
-            string text = util.HoursToHMS(value);
+            string text = ASCOM.Tools.Utilities.HoursToHMS(value);
             try { this.Invoke(setText, text); }
             catch { }
         }
@@ -181,7 +181,7 @@ namespace ASCOM.Simulator
         public void Declination(double value)
         {
             SetTextCallback setText = new SetTextCallback(SetDecText);
-            string text = util.DegreesToDMS(value);
+            string text = ASCOM.Tools.Utilities.DegreesToDMS(value);
             try { this.Invoke(setText, text); }
             catch { }
         }
@@ -189,7 +189,7 @@ namespace ASCOM.Simulator
         public void Altitude(double value)
         {
             SetTextCallback setText = new SetTextCallback(SetAltitudeText);
-            string text = util.DegreesToDMS(value);
+            string text = ASCOM.Tools.Utilities.DegreesToDMS(value);
             try { this.Invoke(setText, text); }
             catch { }
         }
@@ -197,7 +197,7 @@ namespace ASCOM.Simulator
         public void Azimuth(double value)
         {
             SetTextCallback setText = new SetTextCallback(SetAzimuthText);
-            string text = util.DegreesToDMS(value);
+            string text = ASCOM.Tools.Utilities.DegreesToDMS(value);
             try { this.Invoke(setText, text); }
             catch { }
         }
